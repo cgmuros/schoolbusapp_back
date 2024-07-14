@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Body, HTTPException, status
 from typing import Dict
 from ..models import Credenciales
 
@@ -22,5 +22,5 @@ def autenticar_usuario(credenciales: Credenciales) -> Dict[str, str]:
 
 
 @router.post("/login")
-def login(credenciales: Credenciales = Depends()):
+def login(credenciales: Credenciales = Body(...)):
     return autenticar_usuario(credenciales)
