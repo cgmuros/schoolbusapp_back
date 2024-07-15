@@ -1,27 +1,33 @@
-from fastapi import APIRouter, Body, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from typing import Dict
-from ..models import Credenciales
+from ..models import Credentials
 
 router = APIRouter()
 
-# Simulamos una base de datos de usuarios
-usuarios = {
-    "usuario1": {"nombre": "cgmuros@gmail.com", "contraseña": "alfa1414"},
-    "usuario2": {"nombre": "ilsesilva@gmail.com", "contraseña": "alfa1414"},
+# Simulated user database
+users = {
+    "user1": {"name": "cgmuros@gmail.com", "password": "alfa1414"},
+    "user2": {"name": "ilsesilva@gmail.com", "password": "alfa1414"},
 }
 
 
-def autenticar_usuario(credenciales: Credenciales) -> Dict[str, str]:
-    for usuario_data in usuarios.values():
-        if usuario_data["nombre"] == credenciales.usuario and usuario_data["contraseña"] == credenciales.contraseña:
-            return {"mensaje": "Autenticación exitosa"}
-    return {
-        "error": "Credenciales inválidas",
-        "code": 401,
-        "message": "Las credenciales proporcionadas son incorrectas. Por favor, verifica tu usuario y contraseña."
-    }
+def authenticate_user(credentials: Credentials) -> Dict[str, str]:
+    # Find the user in the database
+    user_data = next((data for data in users.values() if data["name"] == credentials.username), None)
+
+    # If user not found or password is incorrect, raise an exception
+    if not user_data or user_data["password"] != credentials.password:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Return a success message if authentication is successful
+    return {"message": "Authentication successful"}
 
 
 @router.post("/login")
-def login(credenciales: Credenciales = Body(...)):
-    return autenticar_usuario(credenciales)
+def login(credentials: Credentials):
+    # Authenticate the user and return the response
+    return authenticate_user(credentials)
