@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from typing import Dict
 from ..models import Credentials
+from ..auth import create_access_token
 
 router = APIRouter()
 
@@ -23,11 +24,12 @@ def authenticate_user(credentials: Credentials) -> Dict[str, str]:
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    # Return a success message if authentication is successful
-    return {"message": "Authentication successful"}
+    # Create and return an access token
+    access_token = create_access_token(credentials.username)
+    return {"access_token": access_token}
 
 
 @router.post("/login")
 def login(credentials: Credentials):
-    # Authenticate the user and return the response
+    # Authenticate the user and return the access token
     return authenticate_user(credentials)
