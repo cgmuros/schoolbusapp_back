@@ -10,6 +10,7 @@ usuarios = {
     "usuario2": {"nombre": "ilsesilva@gmail.com", "contraseña": "alfa1414"},
 }
 
+
 def autenticar_usuario(credenciales: Credenciales) -> Dict[str, str]:
     usuario = usuarios.get(credenciales.usuario)
     if not usuario or usuario["contraseña"] != credenciales.contraseña:

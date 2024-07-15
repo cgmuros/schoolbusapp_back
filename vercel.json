@@ -7,6 +7,10 @@
   ],
   "routes": [
     {
+      "src": "/login",
+      "dest": "app/main.py"
+    },
+    {
       "src": "/(.*)",
       "dest": "app/main.py"
     }
