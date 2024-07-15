@@ -126,3 +126,5 @@ celerybeat.pid
 *.swp
 *.swo
 *.swn
+
+app/__pycache__/
