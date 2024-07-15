@@ -12,14 +12,14 @@ usuarios = {
 
 
 def autenticar_usuario(credenciales: Credenciales) -> Dict[str, str]:
-    usuario = usuarios.get(credenciales.usuario)
-    if not usuario or usuario["contraseña"] != credenciales.contraseña:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Credenciales inválidas",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return {"mensaje": "Autenticación exitosa"}
+    for usuario_data in usuarios.values():
+        if usuario_data["nombre"] == credenciales.usuario and usuario_data["contraseña"] == credenciales.contraseña:
+            return {"mensaje": "Autenticación exitosa"}
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Credenciales inválidas",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
 
 
 @router.post("/login")
